@@ -7,7 +7,7 @@ const autoCompleteConfig = {
         `;
     }, 
     inputValue(photo){
-        return photo.photographer; 
+        return photo.alt; 
     }, 
     async fetchData(searchTerm) {
         const response = await axios.get('https://api.pexels.com/v1/search', {
@@ -44,17 +44,11 @@ createAutoComplete({
 let leftPhoto; 
 let rightPhoto; 
 const onPhotoSelect = async (photo, summaryElement, side) => {
-    const response = await axios.get('https://api.pexels.com/v1/photos/', {
-        params: {
-            id: photo.id,
-            Authorization: '563492ad6f917000010000018ecb400f0b0945338ac816145eba6a31',
-            
-        }
+    const response = await axios.get(`https://api.pexels.com/v1/photos/${photo.id}`, {    
     });
-
-    console.log(photo.id)
-    
     summaryElement.innerHTML = photoTemplate(response.data);
+
+    console.log(response.data)
 
     if (side === 'left'){
         leftPhoto = response.data; 
@@ -88,20 +82,20 @@ const runComparison = () => {
 };
  
 const photoTemplate = (photoDetail) => {
-    const dollars = parseInt(photoDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, ''));
-    const metascore = parseInt(photoDetail.Metascore);
-    const imbdRating = parseFloat(photoDetail.imdbRating);
-    const imdbVotes = parseFloat(photoDetail.imdbVotes.replace(/,/g, ''));
+    // const dollars = parseInt(photoDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, ''));
+    // const metascore = parseInt(photoDetail.Metascore);
+    // const imbdRating = parseFloat(photoDetail.imdbRating);
+    // const imdbVotes = parseFloat(photoDetail.imdbVotes.replace(/,/g, ''));
 
  
-    const awards = photoDetail.Awards.split(' ').reduce((prev, word) => {
-        const value = parseInt(word);
-        if(isNaN(value)){
-            return prev; 
-        } else{
-            return prev + value; 
-        }
-    }, 0)
+    // const awards = photoDetail.Awards.split(' ').reduce((prev, word) => {
+    //     const value = parseInt(word);
+    //     if(isNaN(value)){
+    //         return prev; 
+    //     } else{
+    //         return prev + value; 
+    //     }
+    // }, 0)
     
     
 
@@ -109,7 +103,7 @@ const photoTemplate = (photoDetail) => {
         <article class="media>
             <figure class="media-left">
                 <p class="image">
-                    <img src="${photo.src.large}"/>
+                    <img src="${photoDetail.src.large}"/>
                 </p>
 
             </figure> 
